@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>嵌套组件</title>
+</head>
+<body>
+<div id="app">
+    <parent></parent>
+</div>
+<script src="../node_modules/vue/dist/vue.js"></script>
+<script type="text/javascript">
+    'use strict';//js严格模式
+    /*
+    *
+    * <div>parent
+         <div>son
+            <div>
+              grandson
+            </div>
+        </div>
+     </div>
+    * */
+    let grandson = {template:'<div>grandson</div>'};
+    let son = {
+        template:'<div>son<grandson></grandson></div>',
+        components:{
+            grandson:grandson
+        }
+    };
+    let parent = {
+        template:'<div>parent<son></son></div>',
+        components:{
+            son:son
+
+        }
+    };
+    let vm= new Vue({
+        el:'#app',
+        components:{
+            parent:parent
+
+        }
+    })
+</script>
+
+</body>
+</html>

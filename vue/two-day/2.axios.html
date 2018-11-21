@@ -1,0 +1,123 @@
+ <!Doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>checkbox</title>
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css">
+    <style>
+        [v-cloak]{display: none;}/*解决闪烁问题,后期都可以不采用*/
+    </style>
+</head>
+<body>
+
+<div id="app" v-cloak>
+    <!--bootstrap 栅格化布局 默认12列-->
+    <!--vue框架的 iview,elementui-->
+    <div class="container">
+
+        <!--每一行都用12列-->
+        <div class="row">
+
+            <table class="table table-bordered table-hover">
+                <caption class="h2 text-center text-danger">购物车</caption>
+                <tr>
+                    <!--click点击时,checkbox的状态还没有改变,change才会拿到改变后的状态-->
+                    <th>全选<input type="checkbox" v-model="checkAll" @change="change"></th>
+                    <td>商品</td>
+                    <td>单价</td>
+                    <td>数量</td>
+                    <td>小计</td>
+                    <td>操作</td>
+                </tr>
+                <tr v-for="(product,index) in products">
+                    <td><input type="checkbox" v-model="product.isSelected" @change="changeOne"></td>
+                    <td><img :src="product.productImg" alt="">{{product.productName}}</td>
+                    <td>{{product.productPrice}}</td>
+                    <td><input type="number" v-model.number="product.productConet"></td>
+                    <td>
+                        <!--过滤器 原数据不变的情况下,只改变现实的效果  管道符-->
+                        {{product.productPrice*product.productConet|toFixed(2)}}
+                    </td>
+                    <td><button class="btn btn-danger" @click="remove(product)">删除</button></td>
+                </tr>
+                <tr>
+                    <td colspan="6">总价格:{{sum()|toFixed(2)}}</td>
+                </tr>
+
+            </table>
+        </div>
+    </div>
+
+</div>
+<!--基于promise的-->
+<script src="../node_modules/axios/dist/axios.js"></script>
+<script src="../node_modules/vue/dist/vue.js"></script>
+<script type="text/javascript">
+    'use strict';//js严格模式
+    //引入vue后白给你一个Vue构造函数
+    let vm = new Vue({ //vm == viewModel
+        el:"#app",//告诉vue能管理哪个部分,querySeletor
+        filters:{//可以有好多的自定义过滤器
+            toFixed:function(input,param){
+                return '$'+input.toFixed(param);//input代表的是管道符前面的内容,param代表的是toFixed中传递的参数
+            }
+        },
+        //专门用来发送ajax的方法
+        created(){//在数据被初始化后会调用,this指向的事vm实例,是钩子函数,
+            this.getData();
+        },
+        methods:{
+            getData(){
+                var _this = this;
+                //回调函数 将后续的处理逻辑传入到当前要做的事,事情做好后调用此函数
+                //promise 解决回调问题,promise三个状态 成功态 失败态 等待
+                axios.get('./cars.json').then(function(res){//success
+                    _this.products = res.data;//获取数据,拿到的需要是res.data
+                    _this.changeOne();
+                    console.log(res)
+                    console.log(_this.products);
+                },function(err){//error
+                    console.log(err);
+                })
+            },
+            //删除方法,从数组里拿出对象,同一个空间同一个地址里相等就删掉用filter方法.
+            remove:function(p){
+                this.products = this.products.filter(function(item){//过滤
+                    return item!==p;
+                });
+            },
+            change:function(){
+                //实现全选和反选,根据当前自己的状态,实现全选和反选
+                var _this = this;
+                this.products.forEach(function(item){
+                    item.isSelected= _this.checkAll;
+                });
+
+            },
+            //下面控制上面全选
+            changeOne:function(){
+               this.checkAll =  this.products.every(function(item){
+                    return item.isSelected;
+                })
+            },
+            sum:function() {//求和函数
+                return this.products.reduce(function(prev, next){
+                    if(!next.isSelected){
+                        return prev;
+                    }else{
+                        return prev + next.productPrice * next.productConet;
+                    }
+              },0)
+            }
+        },
+        data:{
+            products:[],
+            checkAll:false
+        }
+    });//Object.defineProerty
+
+
+
+</script>
+</body>
+</html>

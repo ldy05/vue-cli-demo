@@ -1,0 +1,47 @@
+<!Doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>动画</title>
+    <style>
+        [v-cloak]{display: none;}/*解决闪烁问题,后期都可以不采用*/
+    </style>
+</head>
+<body>
+<script src="../node_modules/vue/dist/vue.js"></script>
+<div id="app" v-cloak>
+    <div @click.capture.stop="parent"><!--capture 捕获-->
+        parent
+        <div @click.once="child">
+            child
+            <div @click.stop="grandson">
+                grandson
+            </div>
+        </div>
+    </div>
+    <a href="www.baidu.com" @click.prevent="parent">去百度</a>
+
+</div>
+<script type="text/javascript">
+    'use strict';//js严格模式
+    let vm = new Vue({
+        el:"#app",
+        methods:{
+          parent:function(){
+              alert('parent');
+          },
+          child:function(){
+              alert('child');
+          },
+          grandson:function(e){
+              alert('grandson');
+              //e.stopPropagation();//阻止事件冒泡
+          }
+        },
+        data:{
+
+        }
+    });
+</script>
+</body>
+</html>

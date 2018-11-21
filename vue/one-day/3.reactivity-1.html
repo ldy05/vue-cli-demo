@@ -1,0 +1,32 @@
+<!Doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>改变数组</title>
+</head>
+<body>
+<script src="../node_modules/vue/dist/vue.js"></script>
+<div id="app">
+    <!----moustache 小胡子语法 表达式 可以放赋值 取值 三元-->
+    {{arr}}
+</div>
+<script type="text/javascript">
+    'use strict';//js严格模式
+    //vue会循环data中的数据(数据劫持) 依次的增加getter和setter
+    let vm = new Vue({ //vm == viewModel
+        el:"#app",//告诉vue能管理哪个部分,querySeletor
+        data: {//data中的数据会被vm所代理
+            arr: [1, 2, 3]
+        }
+    });
+    //去改变数组中的某一项是监控不到的,也不能改变数组长度的方法
+    //错误 vm.arr[0]=100;vm.arr.length -=2;
+    //变异方法: pop push shift unshift sort reserve splice (数组变化可以操做)
+    vm.arr = vm.arr.map(function(item){
+        return item*3;
+    });
+
+
+</script>
+</body>
+</html>

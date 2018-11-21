@@ -1,0 +1,55 @@
+<!Doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>computed-全选</title>
+    <!--引进animate.css-->
+    <link rel="stylesheet" href="../node_modules/animate.css/animate.min.css">
+    <style>
+        [v-cloak]{display: none;}/*解决闪烁问题,后期都可以不采用*/
+        .box{
+            width: 100px;
+            height: 100px;
+            background: red;
+        }
+
+    </style>
+</head>
+<body>
+<script src="../node_modules/vue/dist/vue.js"></script>
+<div id="app">
+    全选 <input type="checkbox" v-model="checkAll"></br>
+    <input type="checkbox" v-for="product in products" v-model="product.isSelected">
+</div>
+<script type="text/javascript">
+    'use strict';//js严格模式
+    let vm = new Vue({
+        el:"#app",
+        data:{
+            products:[
+                {
+                    isSelected:true
+                },
+                {
+                    isSelected:true
+                }
+            ]
+        },
+        computed:{
+            checkAll:{
+                get:function(){
+                    return this.products.every(function(item){
+                        return item.isSelected;
+                    })
+                },
+                set:function(val){//val是给checkAll 赋予值的时候传递过来的
+                    this.products.forEach(function(item){
+                        item.isSelected = val;
+                    })
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>

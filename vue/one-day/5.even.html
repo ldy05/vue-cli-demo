@@ -1,0 +1,27 @@
+<!Doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>事件</title>
+</head>
+<body>
+<script src="../node_modules/vue/dist/vue.js"></script>
+<div id="app">
+    <!-- v-on ===@ -->
+    <!--如果不传递参数 则不要写括号,会自动传入事件源,如果写括号了要手动传入$event属性-->
+   <div @click="fn($event,1)">点我点我点我</div>
+</div>
+<script type="text/javascript">
+    'use strict';//js严格模式
+    //引入vue后白给你一个Vue构造函数
+    let vm = new Vue({ //vm == viewModel  根实例
+        el:"#app",//告诉vue能管理哪个部分,querySeletor
+        data:{//data中放的都是数据
+             },
+        methods:{//methods和data中的数据会全部放到vm上,所以methods里的函数名和data里的名字不能冲突,会报错
+            fn(a){console.log(a)}
+        }
+    });
+</script>
+</body>
+</html>

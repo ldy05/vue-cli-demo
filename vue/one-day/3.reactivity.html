@@ -1,0 +1,29 @@
+<!Doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>改变对象</title>
+</head>
+<body>
+<script src="../node_modules/vue/dist/vue.js"></script>
+<div id="app">
+    <!----moustache 小胡子语法 表达式 可以放赋值 取值 三元-->
+    {{a.name}} {{a.age}} {{a.add}}
+</div>
+<script type="text/javascript">
+    'use strict';//js严格模式
+    //vue会循环data中的数据(数据劫持) 依次的增加getter和setter
+    let vm = new Vue({ //vm == viewModel
+        el:"#app",//告诉vue能管理哪个部分,querySeletor
+        data:{//data中的数据会被vm所代理
+           a:{name:''}//方法1  使用变量时 先要初始化,否则新加的属性不会导致页面刷新
+        }
+    });
+
+    vm.$set(vm.a,'age',18);//方法2  此方法可以给对象添加响应式的数据变化
+
+    //方法3 替换元对象
+    vm.a = {name:'ldy',age:"19",add:"bj"}
+</script>
+</body>
+</html>

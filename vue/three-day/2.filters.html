@@ -1,0 +1,28 @@
+<!Doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>过滤器</title>
+    <style>
+        [v-cloak]{display: none;}/*解决闪烁问题,后期都可以不采用*/
+    </style>
+</head>
+<body>
+<script src="../node_modules/vue/dist/vue.js"></script>
+<div id="app1">{{'hello'|my('ldy')}}</div>
+<div id="app2">{{'hello'|my(123)}}</div>
+<script>
+    'use strict';//js严格模式
+    Vue.filter('my',(data,val)=>{//全局过滤器,放到页面的顶部
+        return data+val
+    });
+    new Vue({
+        el:"#app1"
+    });
+    new Vue({
+        el:"#app2"
+    })
+
+</script>
+</body>
+</html>

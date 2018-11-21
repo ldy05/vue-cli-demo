@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>局部组件</title>
+</head>
+<body>
+<div id="app">
+    <component1></component1>
+    <component2></component2>
+</div>
+<script src="../node_modules/vue/dist/vue.js"></script>
+<script type="text/javascript">
+
+    //局部组件三部曲
+    //1.创建这个组件
+    //2.注册这个组件
+    //3.使用这个组件
+    //组件是相互独立的,不能直接跨作用域 vm的实例也是一个组件,组件中拥有生命周期函数
+    //如果组件公用数据,会导致同时更新(独立性)
+    //子组件不能直接使用父组件的数据(组件之间的数据交互)
+    //组件理论上可以无限嵌套
+    var component1 = {
+        template:'<div @click="fn">组件一{{school}}</div>',
+        data(){
+            return {
+                school:'ldy'
+            }
+        },
+        methods:{
+            fn:function(){
+                this.school = 'hello'
+            }
+        }
+    };
+    var component2 = {
+        template:'<div>组件二</div>'
+    };
+    var vm= new Vue({
+        el:'#app',
+        components:{
+            component1:component1,
+            component2:component2
+        }
+    })
+</script>
+<!--分类 页面级组件:1.一个页面是一个组件
+                  2.将可复用的部分抽离出来 叫基础组件
+   一个自定义标签 vue就会把他看成一个组件,vue可以给这些标签赋予一定意义
+-->
+</body>
+</html>

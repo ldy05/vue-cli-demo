@@ -1,0 +1,41 @@
+<!Doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>computed-检查</title>
+    <!--引进animate.css-->
+    <link rel="stylesheet" href="../node_modules/animate.css/animate.min.css">
+    <style>
+        [v-cloak]{display: none;}/*解决闪烁问题,后期都可以不采用*/
+    </style>
+</head>
+<body>
+<script src="../node_modules/vue/dist/vue.js"></script>
+<div id="app">
+    <input type="text" v-model="a">
+    {{msg}}
+    <!--根据输入框的内容,算出一个错误信息-->
+</div>
+<script type="text/javascript">
+    'use strict';//js严格模式
+    let vm = new Vue({
+        el:"#app",
+        data:{
+            a:"",
+            msg:""
+        },
+        computed:{//computed不支持异步
+            msg:function(){
+                if(this.a.length<3&&this.a.length>1){
+                    return "少了"
+                }
+                if(this.a.length>6){
+                    return "多了"
+                }
+                return " ";
+            }
+        }
+    });
+</script>
+</body>
+</html>

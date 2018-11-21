@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+</head>
+<body>
+    <div id="el" v-bind:title="message" v-bind:style="red" v-once>
+        {{message}}
+        <button @click="sayHello">click me</button>
+    </div>
+    <div id="el1">
+        {{mes}}
+        <a  v-html="h1" v-bind:href="url"></a>
+    </div>
+    <div id="el2" v-if="seen" v-bind:style="blue">
+        {{message}}
+    </div>
+    <ul id="el3">
+        <li v-for="(item, index) in items" >
+            {{item.text}}-{{ index }}
+        </li>
+    </ul>
+    <div id="el4">
+        <p>{{message}}</p>
+        <button v-on:click="reverseMessage">点击反转</button>
+        <input type="text" v-model="message">
+    </div>
+</body>
+<script type="text/javascript">
+    var app = new Vue({
+        el:"#el",
+        data:{
+            message:"hello vue",
+            sayHello:function(){
+                alert(222)
+            },
+            red:"color:red"
+
+        }
+    });
+    var app1 = new Vue({
+        el:"#el1",
+        data:{
+            mes:"hello vue1",
+            h1:'<h1>我是标题</h1>',
+            url:"http://www.tammyldy.cn/"
+        }
+    });
+    var app2 = new Vue({
+        el:"#el2",
+        data:{
+            message:"我出现了",
+            seen:true,
+            blue:"color:blue"
+        }
+    });
+    var app3 = new Vue({
+        el:"#el3",
+        data:{
+            items:[
+                {text:"语文"},
+                {text:"数学"},
+                {text:"计算机"}
+            ]
+        }
+    });
+    var app4 = new Vue({
+        el:"#el4",
+        data:{
+            message:"hello Vue.js"
+        },
+        methods:{
+            reverseMessage:function(){
+                this.message = this.message.split("").reverse().join("")
+            }
+        }
+    });
+    //如果想要获取到app这一实例中选项的对象，Vue提供$进行获取
+    console.log(app.$data.message);
+    console.log(app.$el===document.getElementById("el"));
+</script>
+</html>

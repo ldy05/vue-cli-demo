@@ -1,0 +1,94 @@
+<!Doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>pannel</title>
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css">
+</head>
+<body>
+<!--组件循环 一定要有key-->
+
+<script src="../node_modules/vue/dist/vue.js"></script>
+<div id="app">
+    <pannel :color="item.type" @say-title="sayTitle" v-for="(item,index) in lists" :key="index">
+        <div slot="title" >{{item.tit}}</div>
+        <div slot="content">{{item.content}}</div>
+        <div slot="footer" v-if="item.author">{{item.author}}</div>
+    </pannel>
+</div>
+<template id="pannel" >
+    <div class="panel" :class="getColor" >
+        <div class="panel-heading" ref="tit">
+            <slot name="title" ></slot>
+        </div>
+        <div class="panel-body">
+            <slot name="content"></slot>
+        </div>
+        <div class="panel-footer">
+            <slot name="footer"></slot>
+        </div>
+        <button @click="say">点击弹出标题</button>
+    </div>
+</template>
+<script type="text/javascript">
+    'use strict';//js严格模式
+    var pannel = {
+        template: "#pannel",
+        props:{
+            color:{//props验证
+                type:[String],
+                default:'primary'
+            }
+        },
+        methods:{
+            say:function(){
+                this.$emit("say-title",this.$refs.tit.innerText);
+
+            }
+        },
+        computed:{
+            getColor(){
+                return 'panel-'+this.color;
+            }
+        }
+
+    };
+    var vue = new Vue({
+        el:'#app',
+        data:{
+           lists:[
+               {
+                   type:'primary',
+                   tit:'学习Vue',
+                   content:'这是一个内容区域,复习slot的用法,ref的使用,nextTick的用法',
+                   author:'作者:ldy'
+               },
+               {
+                   type:'warning',
+                   tit:'学习react',
+                   content:'内容2'
+               },
+               {
+                   type:'danger',
+                   tit:'学习angular',
+                   content:'内容3',
+                   author:'作者:ldy'
+               }
+           ]
+        },
+        components:{
+            pannel
+        },
+        methods:{
+            sayTitle:function(tit){
+                alert(tit);
+            }
+        }
+
+
+
+
+    })
+</script>
+</body>
+</html>

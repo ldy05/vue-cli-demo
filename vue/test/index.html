@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta http-equiv="Expires" content="0">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Cache-control" content="no-cache">
+  <meta http-equiv="Cache" content="no-cache">
+
+  <title>玩游戏领现金红包</title>
+
+  <link href="http://n.sinaimg.cn/games/maozhuachaihongbao/index-5.css" rel="stylesheet" type="text/css">
+
+</head>
+<body>
+<script>
+  (function(){
+    var MAX = 500;
+    var w_width = document.documentElement.clientWidth,
+      w_height = document.documentElement.clientHeight,
+      res = w_width < w_height ? w_width : w_height;
+    document.documentElement.style.fontSize = (res > MAX ? MAX : res)/7.5 +"px";
+  }());
+</script>
+
+<div id="my-app">
+  <div class="container" :class="{'overflow-auto':confirm_page(4),'completed':isCompleted}">
+    <!--头部游戏详情-->
+    <div class="game-com t-game-com" :class="{'t-gc-show':confirm_page(3)}">
+      <!--游戏图片-->
+      <div class="game-com-img"><img :src="game_com_img"></div>
+      <!--游戏信息-->
+      <div class="game-com-mid">
+        <!--游戏名称-->
+        <div class="game-com-txt">{{game_com_name}}</div>
+        <!--游戏星星数-->
+        <div class="game-com-stars">
+          <div class="star-item"><span :style="{width:starwidth(2)}"></span><i></i></div>
+          <div class="star-item"><span :style="{width:starwidth(4)}"></span><i></i></div>
+          <div class="star-item"><span :style="{width:starwidth(6)}"></span><i></i></div>
+          <div class="star-item"><span :style="{width:starwidth(8)}"></span><i></i></div>
+          <div class="star-item"><span :style="{width:starwidth(10)}"></span><i></i></div>
+        </div>
+        <div class="icon-c" v-for="iconc in game_com_iconcs"><span>{{iconc}}</span></div>
+      </div>
+      <!--游戏评分-->
+      <div class="game-com-score">{{score_z}}.<span>{{score_p}}</span></div>
+      <!--《游戏详情按钮》-->
+      <a @click="game_detail" class="game-detail">游戏详情</a>
+    </div>
+
+    <div class="bg-main" :class="{'bg-main-2':confirm_page(2),'bg-main-3':confirm_page(3),'bg-main-4':confirm_page(4)}">
+      <!--对话气泡框-->
+      <div class="duihua">
+        <img :src="bubble_img" class="duihua-img">
+        <div class="duihua-txt">凑齐3人就送15元现金红包~</div>
+        <div class="duihua-name">{{bubble_name}}</div>
+      </div>
+      <!--内容部分-->
+      <div class="main main-ani-1 ani-delay-b">
+        <!--恭喜你，获得拆红包资格-->
+        <div class="congra-p">恭喜你，获得拆红包资格</div>
+        <!--队伍头像列表-->
+        <div class="friends-list">
+          <div v-for="item in teammates" class="friends-item">
+            <!--头像-->
+            <img v-if="item.head_image" :src="item.head_image" class="head_image"/>
+            <!--不存在为问号-->
+            <img v-else src="http://n.sinaimg.cn/games/maozhuachaihongbao/wenhao.png" class="head_null"/>
+          </div>
+        </div>
+        <!--还差几人-->
+        <p class="x_txt">还差<span>{{remain_person_num}}</span>人，即可一起拆红包</p>
+        <!--剩余时间-->
+        <p class="x_time" v-if="end_time !== '00:00:00'">{{end_time}}后失效</p>
+        <p class="x_time" v-else>已失效</p>
+        <!--推荐的游戏-->
+        <div class="game-com">
+          <!--游戏图片-->
+          <div class="game-com-img"><img :src="game_com_img"></div>
+          <!--游戏信息-->
+          <div class="game-com-mid">
+            <!--游戏名称-->
+            <div class="game-com-txt">{{game_com_name}}</div>
+            <!--游戏星星-->
+            <div class="game-com-stars">
+              <div class="star-item"><span :style="{width:starwidth(2)}"></span><i></i></div>
+              <div class="star-item"><span :style="{width:starwidth(4)}"></span><i></i></div>
+              <div class="star-item"><span :style="{width:starwidth(6)}"></span><i></i></div>
+              <div class="star-item"><span :style="{width:starwidth(8)}"></span><i></i></div>
+              <div class="star-item"><span :style="{width:starwidth(10)}"></span><i></i></div>
+            </div>
+          </div>
+          <!--游戏分数-->
+          <div class="game-com-score">{{score_z}}.<span>{{score_p}}</span></div>
+        </div>
+      </div>
+      <div class="main-2 main-ani-1 ani-delay-b">
+        <p class="sp1">恭喜你，获得现金红包</p>
+        <!--我获得的红包-->
+        <p class="sp2"><span>{{my_red_packet}}</span>元</p>
+      </div>
+      <!--装饰条-->
+      <i class="zs-t"></i>
+    </div>
+    <!--红包背景-->
+    <div class="bg-bottom" :class="{'bg-bottom-2':confirm_page(2),'bg-bottom-3':confirm_page(3),'bg-bottom-4':confirm_page(4)}">
+      <!--按钮 安装游戏参与-->
+      <a class="B-btn" :style="{marginTop:mg}" @click="install_game_join" v-if="btn_switch === 1">安装游戏参与</a>
+
+      <!--按钮 邀请好友一起拆-->
+      <a class="B-btn" :style="{marginTop:mg}" @click="invite_friends_chai"  v-else-if="btn_switch === 2">邀请好友一起拆</a>
+
+      <!--按钮 立即前往猫爪APP提现-->
+      <a class="B-btn" :style="{marginTop:mg}" @click="to_app_getMoney"  v-else>立即前往猫爪APP提现</a>
+
+      <div class="b-main">
+        <p class="tp1">下载猫爪后，以微信方式登录即可领取</p>
+        <div class="tp2">看看谁参与了拆红包</div>
+        <div class="tp3">
+          <!--队伍获得红包列表-->
+          <div class="hjlb" v-for="item in teammates" v-if="item.head_image">
+            <!--队员头像-->
+            <img :src="item.head_image" class="hjlb-img">
+            <!--队员名称-->
+            <div class="hjlb-name">{{item.name}}</div>
+            <!--队员获得红包-->
+            <div class="hjlb-packet">获得<span>{{item.red_packet}}</span>元</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--弹窗-->
+    <div class="dialog" :class="{isShow:dialog_isShow}" @click="close_dialog">
+      <!--弹窗1-->
+      <template v-if="dialog_switch === 1">
+        <div class="dialog-1">
+          <i class="share-arrow dia-ani-1 ani-delay-c"></i>
+          <p class="dp dia-ani-1 ani-delay-a">1.点击右上角,更多按钮<br/>2.选择在Safari中打开</p>
+          <p class="yp dia-ani-1 ani-delay-b">重要提示！<br/>安装游戏后，再次打开好友<br/>分享的链接参与拆红包</p>
+          <p></p>
+        </div>
+      </template>
+      <!--弹窗2-->
+      <template v-else-if="dialog_switch === 2">
+        <div class="dialog-2">
+          <i class="share-arrow dia-ani-1 ani-delay-c"></i>
+          <p class="ap dia-ani-1 ani-delay-a">还差<span class="aspan">{{remain_person_num}}</span>人就可拆红包</p>
+          <p class="bp dia-ani-1 ani-delay-a" v-if="end_time !== '00:00:00'"><span class="endTime">{{end_time}}</span>后失效</p>
+          <p class="bp dia-ani-1 ani-delay-a" v-else><span class="endTime">已失效</span></p>
+          <p class="cp dia-ani-1 ani-delay-b">点击右上角发送给更多好友</p>
+        </div>
+      </template>
+      <!--弹窗3-->
+      <template v-else-if="dialog_switch === 3">
+        <div class="dialog-3">
+          <p class="ep dia-ani-1 ani-delay-a">分享链接已失效</p>
+          <p class="fp dia-ani-1 ani-delay-b">请通知好友重新发送链接</p>
+        </div>
+      </template>
+      <!--弹窗4-->
+      <template v-else-if="dialog_switch === 4">
+        <div class="dialog-4">
+          <p class="gp dia-ani-1 ani-delay-a" key="d4p">分享链接已失效</p>
+          <a class="dia-btn dia-ani-1 ani-delay-b" @click.stop="re_invite" key="dialog-btn-1">重新邀请</a>
+        </div>
+      </template>
+      <!--弹窗5-->
+      <template v-else-if="dialog_switch === 5">
+        <div class="dialog-5">
+          <p class="hp dia-ani-1 ani-delay-a" key="d5p">真遗憾，红包已被别人拆了</p>
+          <a class="dia-btn dia-ani-1 ani-delay-b" @click.stop="install_maozhua"  key="dialog-btn-2">安装猫爪APP</a>
+          <p class="jp dia-ani-1 ani-delay-c">自己发起拆红包</p>
+        </div>
+      </template>
+      <!--弹窗6-->
+      <template v-else>
+        <div class="dialog-3 dialog-6">
+          <p class="ep dia-ani-1 ani-delay-a" key="d6p-1">该游戏推广已结束</p>
+          <p class="fp dia-ani-1 ani-delay-b"  key="d6p-2">5秒后自动跳转游戏详情</p>
+        </div>
+      </template>
+    </div>
+  </div>
+</div>
+
+<!--横屏提示-->
+<div class="orientation-prompt" style="display: none;" id="orientation-prompt">
+  <div class="orientation-prompt-main">
+    <img class="orientation-phone phone-animation" src="http://n.sinaimg.cn/games/779860c8/20170720/ico-land.png">
+    <p class="orientation-prompt-txt">为了更好的体验，请使用竖屏浏览</p>
+  </div>
+</div>
+
+<script src="http://n.sinaimg.cn/games/maozhuachaihongbao/vue.js"></script>
+<script src="http://n.sinaimg.cn/games/maozhuachaihongbao/common.js"></script>
+<script>
+  //控制横屏
+  SIMPLE_H5_UTILS.mobileOrientationCtrl();
+
+  //页面所需的信息，初始化时填入
+  var data = {
+    page_switch:4,                          //界面切换，共4个界面，1-4，按需切换
+    btn_switch:1,                           //按钮切换，共3个按钮，1-3，按需切换
+    dialog_switch:1,                        //弹窗切换，共6个弹窗，1-6，按需切换
+
+    dialog_isShow:false,                    //控制弹窗是否显示，true-显示，false-不显示
+
+    my_red_packet:5,                        //我的红包金额
+    remain_person_num:1,                    //还剩****人可以拆红包
+    end_time:"23:59:59",                    //剩余时间
+
+    //对话气泡框
+    bubble_img:"http://n.sinaimg.cn/games/maozhuachaihongbao/duihua-img.png",    //对话气泡框的头像图片地址
+    bubble_name:"萨尔",                     //对话气泡框的名字
+
+    //队伍信息，没有就留空对象，保证length为3
+    teammates:[
+      {
+        head_image:"http://n.sinaimg.cn/games/maozhuachaihongbao/duihua-img.png",   //队员头像图片地址
+        name:"小刚",                           //队员名称
+        red_packet:5                          //队员获得红包
+      },
+      {
+        head_image:"http://n.sinaimg.cn/games/maozhuachaihongbao/duihua-img.png",
+        name:"小红",
+        red_packet:0
+      },
+      {}
+    ],
+
+    //游戏推荐信息
+    game_com_img:"http://n.sinaimg.cn/games/maozhuachaihongbao/duihua-img.png",   //游戏图标
+    game_com_name:"王者荣耀",                 //游戏名称
+    game_com_score:"9.5",                   //游戏评分
+    game_com_iconcs:["动作","竞技"],         //游戏标签
+
+    isCompleted:false                     //页面是否加载完成
+  };
+
+  var vm = new Vue({
+    el:'#my-app',
+    data:data,
+    computed:{
+      //底部大按钮marginTop自适应
+      mg:function(){
+        var wh = document.documentElement.clientHeight,
+            fs = parseFloat(document.documentElement.style.fontSize),
+            h1 = (this.page_switch === 1 ? 8.82 : 9.2) * fs;
+        if(this.page_switch === 1){
+          h1 = 8.82 * fs;
+        }else if(this.page_switch === 2){
+          h1 = 9.2 * fs;
+        }else if(this.page_switch === 3){
+          h1 = 8.82 * fs;
+        }else{
+          return 4.83 * parseFloat(document.documentElement.style.fontSize) +"px";
+        }
+        var h2 = fs,
+            h3 = 3.96 * fs;
+        return ((wh-h1-h2)/2)+h3 +"px";
+      },
+      //游戏分数整数部分
+      score_z:function(){
+        return parseFloat(this.game_com_score).toFixed(1).split(".")[0];
+      },
+      //游戏分数小数部分
+      score_p:function(){
+        return parseFloat(this.game_com_score).toFixed(1).split(".")[1];
+      }
+    },
+
+    watch:{
+      //监听页面内容切换，切换后将内容的scrollTop归零
+      page_switch:function(){
+        document.querySelector(".container").scrollTop = 0;
+      }
+    },
+
+    mounted:function(){
+      var images = ["http://n.sinaimg.cn/games/maozhuachaihongbao/b1-2.png","http://n.sinaimg.cn/games/maozhuachaihongbao/b2.jpg"],
+          _this = this;
+      SIMPLE_H5_UTILS.preloadImages(images,function(){
+        _this.isCompleted = true;
+        _this.end_time_count();
+      });
+    },
+
+    methods:{
+      //用于更替页面内容class
+      confirm_page:function(index){
+        return this.page_switch === index
+      },
+
+      //根据游戏分数，显示游戏的星星
+      starwidth:function(index){
+        var num_1 = parseInt(parseFloat(this.game_com_score).toFixed(1).split(".")[0]),
+            num_2 = parseFloat(this.game_com_score) - num_1;
+        if(index <= num_1){
+          return "100%";
+        }else if(index - parseFloat(this.game_com_score) < 2){
+          return "54%";
+        }else{
+          return "0%";
+        }
+      },
+
+      //时间倒数计时
+      end_time_count:function(){
+        var arr = this.end_time.split(":"),
+            total_sec = parseInt(arr[0]) * 3600 + parseInt(arr[1]) * 60 + parseInt(arr[2]),
+            _this = this,
+            timer;
+        timer = setInterval(function(){
+          if(total_sec > 0){
+            total_sec --;
+            var hour = parseInt(total_sec/3600),
+              min = parseInt((total_sec - hour*3600)/60),
+              sec = total_sec % 60;
+            hour = (hour + "").length === 2 ?  hour : "0"+hour;
+            min = (min + "").length === 2 ?  min : "0"+min;
+            sec = (sec + "").length === 2 ?  sec : "0"+sec;
+            _this.end_time = hour+":"+min+":"+sec
+          }else{
+            clearInterval(timer);
+          }
+
+        },1000);
+      },
+
+      //关闭弹窗
+      close_dialog:function(){
+        this.dialog_isShow = false;
+      },
+
+      //显示弹窗
+      show_dialog:function(index){
+        this.dialog_switch = index;
+        this.dialog_isShow = true;
+      },
+
+      //点击《重新邀请》按钮
+      re_invite:function(){
+        alert("重新邀请");
+      },
+
+      //点击《安装猫爪APP》按钮
+      install_maozhua:function(){
+        alert("安装猫爪APP");
+      },
+
+      //点击《安装游戏参与》按钮
+      install_game_join:function(){
+        alert("安装游戏参与");
+      },
+
+      //点击《邀请好友一起拆》按钮
+      invite_friends_chai:function(){
+        alert("邀请好友一起拆");
+      },
+
+      //点击《立即前往猫爪APP提现》按钮
+      to_app_getMoney:function(){
+        alert("立即前往猫爪APP提现");
+      },
+
+      //点击《游戏详情》按钮
+      game_detail:function(){
+        alert("游戏详情");
+      }
+    }
+  });
+
+</script>
+</body>
+</html>

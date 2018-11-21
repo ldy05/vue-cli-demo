@@ -1,0 +1,159 @@
+
+
+##vue
+-- vue全家桶 vue.js + vue-router + vuex +axios
+-- 通过组合  完成一个完整的框架
+
+
+## MVC(backbone) 单向
+-- model 数据
+-- view  视图
+-- controller 控制器
+
+## MVVM(Vue angular)双向的
+-- model 数据
+-- view  视图
+-- viewModel 视图模型
+
+
+##指令
+
+-- v-model (表单元素) 忽略掉value, checked,selected,将数据绑定在视图上,视图修改后会影像数据的裱花
+-- v-text取代{{}} v-cloak 解决闪烁(块)问题,后期可以不采用,使用v-cloak要加样式
+-- v-once 绑定一次,数据在裱花不会导致视图刷新,卸载不想刷新的标签上
+-- v-html 将html字符串转化成html
+-- v-for 循环(数组,对象,字符串,数字)
+
+##事件 v-on(@)
+-- 绑定给dom元素,函数需要定义在methods中,不能和data里的内容重名,this指向的是实例,不能使用箭头函数,
+事件源对象如果不写括号,可以自动传入,否则只能手动写$event
+
+
+##用法 安装vue
+
+
+
+##第二天复习
+
+-v-model(如果checkbox,select多选是数组,提供一个value属性,radio checkbox分组靠的是v-model,check selected不存在)
+
+-修饰符  .number .lazy
+
+-按键修饰符  .enter .ctrl.keyCode
+
+-事件
+    - @事件.stop阻止事件冒泡
+
+      stopPropagation(阻止事件传播),cancelBubble==true;
+
+    - @事件.prevent阻止默认行为
+
+      preventDefault,returnValue=false
+
+    - @事件.capture 捕获
+
+      xx.addEventListener("click",fn,true)//true 是捕获,false是冒泡,默认,冒泡
+
+    - @事件.once 绑定一次
+
+      on('click')  off('click')
+
+    - @事件.self 只有点自己的时候
+
+
+##filters 过滤
+
+{{'123'|my(1,2,3)}}
+
+filters:{
+    my(data,praram1,praram2,praram3)
+
+}
+
+##computed计算属性  不是方法
+
+-方法不会有缓存,computed会根据依赖(归vue管理的数据,可以响应式变化的)的属性进行缓存
+
+- 两部分组成,有get和set,不能只写set 如果只有get 可以省略,一般情况下通过js赋值 影响其他人或者表单元素设置值的时候会调用set方法
+
+
+
+##template  标签是vue提供给我们没有任何实际意义,用来包裹元素用的,v-show不支持template,只有v-if使用
+
+
+##class,style 第一种方式是对象,第二种方式是数组
+
+
+## 实现单页开发的方式
+ - 通过hash记录跳转的路径(可以产生历史管理)
+ -  浏览器自带的历史管理的方法 history(history.pushState('','','/')需要服务端支持)可能会导致404错误
+
+开发的时候用hash的方式,上线的话我们会使用history的方式
+
+
+
+
+
+##路由
+- 访问不同的看路径,就可以返回不同的结果
+
+
+##多页面(spa)
+-  single page application
+
+
+##模块
+
+-node模块的规范 commonjs
+-cmd seajs
+ amd require
+
+-umd  为了做兼容处理
+
+-esmodule
+  -如何定义模块 (一个js就是一个模块)
+  -如何导出模块 (export)
+  -如何使用模块 (import)
+
+
+
+##先下载webpack
+
+//
+ npm init -y     初始化
+ npm install --save-dev webpack
+
+安装webpack或者less最好不要安装全局的,否则导致webpack的版本差异
+
+-在package.json中配置一个脚本,这个脚本用的命令是webpack 会去当前的node_modules下找bin对应的webpack名字让其执行,执行的就是bin/webpack.js
+webpack.js需要当前目录下有个名字叫webpak.config.js的文件,我们通过npm run bulid执行的目录是当前文件的目录,所以会去当前目录下查找
+
+-src是放置源码的文件夹
+
+
+## babel 转译es6 ->es5
+
+- 安装 babel
+
+npm install babel-core --save-dev
+
+npm install babel-loader --save-dev
+
+## babel-preset-es2015
+-让翻译官拥有解析es6语法的功能
+
+npm install babel-preset-es2015 --save-dev
+
+
+## babel-preset-stage-0
+
+-解析es7语法
+
+npm install babel-preset-stage-0 --save-dev
+
+
+
+
+
+
+

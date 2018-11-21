@@ -1,0 +1,50 @@
+<!Doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>父调用子组件的方法</title>
+</head>
+<body>
+<script src="../node_modules/vue/dist/vue.js"></script>
+<div id="app">
+    <input type="radio" v-model="value" value="home">home
+    <input type="radio" v-model="value" value="list">list
+    <!--一般用作缓存:为后面的路由做准备,如果缓存了就不会再走created mounted钩子函数了-->
+    <keep-alive>
+        <component :is="value"></component><!--每次切换都会被销毁,耗性能,可以添加keep-alive模板,就会做到缓存-->
+    </keep-alive>
+
+</div>
+<script type="text/javascript">
+    'use strict';//js严格模式
+    var home = {
+        template:'<div>home.page</div>',
+        mounted(){//挂载完
+          alert("挂载1")
+        },
+        beforeDestroy(){
+            alert("销毁1")
+        }
+    };
+    var list = {
+        template:'<div>list.page</div>',
+        mounted(){
+            alert("挂载2")
+        },
+        beforeDestroy(){
+            alert("销毁2")
+        }
+    };
+    var vue = new Vue({
+        el:'#app',
+        components:{
+            home,list
+        },
+        data:{
+            value:"home"
+        }
+
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!Doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>computed</title>
+    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css">
+    <style>
+        [v-cloak]{display: none;}/*解决闪烁问题,后期都可以不采用*/
+    </style>
+</head>
+<body>
+
+<div id="app" v-cloak>
+    <div class="container">
+        <div class="row">
+            <table class="table table-bordered table-hover">
+                <caption class="h2 text-center text-danger">购物车</caption>
+                <tr>
+                    <th>全选<input type="checkbox" v-model="checkAll"></th>
+                    <td>商品</td>
+                    <td>单价</td>
+                    <td>数量</td>
+                    <td>小计</td>
+                    <td>操作</td>
+                </tr>
+                <tr v-for="(product,index) in products">
+                    <td><input type="checkbox" v-model="product.isSelected"></td>
+                    <td><img :src="product.productImg" alt="">{{product.productName}}</td>
+                    <td>{{product.productPrice}}</td>
+                    <td><input type="number" v-model.number="product.productConet"></td>
+                    <td>
+                        {{product.productPrice*product.productConet|toFixed(2)}}
+                    </td>
+                    <td><button class="btn btn-danger" @click="remove(product)">删除</button></td>
+                </tr>
+                <tr>
+                    <td colspan="6">总价格:{{sum|toFixed(2)}}</td>
+                </tr>
+
+            </table>
+        </div>
+    </div>
+
+</div>
+<!--基于promise的-->
+<script src="../node_modules/axios/dist/axios.js"></script>
+<script src="../node_modules/vue/dist/vue.js"></script>
+<script type="text/javascript">
+    'use strict';//js严格模式
+    //引入vue后白给你一个Vue构造函数
+    let vm = new Vue({ //vm == viewModel
+        el:"#app",
+        //当给全选赋值时,要影响其他人的变化,当页面刷新时,获取全选值,是根据下面checkbox计算出来的结果给全选赋值
+        computed:{
+            checkAll:{
+                //当products值变化时重新计算
+                get:function(){//默认v-model会获取checkAll的值,所以会调用get方法
+                    return this.products.every(function(p){//有一个为false,就为false,全都是true,才为true
+                        return p.isSelected;
+                    })
+                },
+                set:function(val){//val是当我们给checkbox赋值的时候,true和false
+                    this.products.forEach(function(p){
+                        return p.isSelected = val;
+                    })
+
+                }
+            },
+            sum:function(){ //如果计算属性写成函数,那么默认调用get方法
+                //sum的结果会被缓存,如果期待的数据没有变化就不会重新执行
+                    return this.products.reduce(function(prev, next){
+                        if(!next.isSelected){
+                            return prev;
+                        }else{
+                            return prev + next.productPrice * next.productConet;
+                        }
+                    },0)
+            }
+        },
+        filters:{//可以有好多的自定义过滤器
+            toFixed:function(input,param){
+                return '$'+input.toFixed(param);//input代表的是管道符前面的内容,param代表的是toFixed中传递的参数
+            }
+        },
+        //专门用来发送ajax的方法
+        created(){//在数据被初始化后会调用,this指向的事vm实例,是钩子函数,
+            this.getData();
+        },
+        methods:{
+            getData(){
+                var _this = this;
+                //回调函数 将后续的处理逻辑传入到当前要做的事,事情做好后调用此函数
+                //promise 解决回调问题,promise三个状态 成功态 失败态 等待
+                axios.get('./cars.json').then(function(res){//success
+                    _this.products = res.data;//获取数据,拿到的需要是res.data
+                    console.log(_this.products);
+                },function(err){//error
+                    console.log(err);
+                })
+            },
+            //删除方法,从数组里拿出对象,同一个空间同一个地址里相等就删掉用filter方法.
+            remove:function(p){
+                this.products = this.products.filter(function(item){//过滤
+                    return item!==p;
+                });
+            }
+        },
+        data:{
+            products:[]
+        }
+    });//Object.defineProerty
+</script>
+</body>
+</html>

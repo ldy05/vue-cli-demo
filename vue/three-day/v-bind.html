@@ -1,0 +1,41 @@
+<!Doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>class-style</title>
+    <style>
+        [v-cloak]{display: none;}/*解决闪烁问题,后期都可以不采用*/
+        .x{background: blue;}
+        .y{font-size: 30px;}
+        .z{color: blueviolet;}
+    </style>
+</head>
+<body>
+<script src="../node_modules/vue/dist/vue.js"></script>
+<div id="app1">
+    <!--动态添加class-->
+    <div class="x " :class="{'z':flag,y:true}">川夏秋冬</div>
+    <div class="x " :class="[class1,class2]">川夏秋冬</div>
+    <ul>
+        <li v-for="(a,index) in 10" :class="{x:index%2}">{{a}}</li>
+    </ul>
+    <!--动态绑定样式-->
+    <div style="color:red;" :style="{fontSize:'20px',backgroundColor:'blue'}">我是样式</div>
+    <div :style="[style1,style2,{color:'red'}]">我是样式</div>
+</div>
+<script>
+    'use strict';//js严格模式
+    //class,style第一种方法是对象,第二种方法是数组
+    new Vue({
+        el:"#app1",
+        data:{
+            flag:true,
+            class1:'y',
+            class2:'z',
+            style1:{fontSize:'20px'},
+            style2:{backgroundColor:'blue'}
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!Doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>自定义指令</title>
+    <style>
+        .box{position: absolute;width: 100px;height: 100px;background: #ffff00;}
+        .box.greenBox{background: #00CC00;}
+    </style>
+</head>
+<body>
+<script src="../node_modules/vue/dist/vue.js"></script>
+<div id="app">
+    <button v-color="flag" @click="changColor">变色</button>
+    <div class="box" v-drag :class="{'greenBox':green}"></div>
+    <div class="box" v-drag :class="{'greenBox':green}"></div>
+</div>
+<script type="text/javascript">
+    'use strict';//js严格模式
+    //引入vue后白给你一个Vue构造函数
+    let vm = new Vue({ //vm == viewModel
+        el:"#app",
+        directives:{
+            color:function(el,bindings){//el指代的是button按钮
+                el.style.background=bindings.value;
+            },
+            drag:function(el){//拖拽
+                var flag = false;
+                el.onmousedown =function(e){
+                    var disx = e.pageX - el.offsetLeft;
+                    var disy = e.pageY - el.offsetTop;
+                    document.onmousemove = function(e){
+                        el.style.left = e.pageX - disx+'px';
+                        el.style.top = e.pageY - disy+'px';
+                    };
+                    document.onmouseup = function(){
+                        document.onmousedown = document.onmousemove = null;
+                    };
+                    e.preventDefault();
+                };
+                el.addEventListener("touchstart",function(e){
+                    flag = true;
+                    var ex = e.touches[0].clientX-el.offsetLeft;
+                    var ey = e.touches[0].clientY-el.offsetTop;
+                    document.addEventListener("touchmove",function(e){
+                        if(flag){
+                            el.style.left = e.touches[0].clientX - ex+'px';
+                            el.style.top = e.touches[0].clientY - ey+'px';
+                        }
+                    },false);
+                    document.addEventListener("touchend",function(){
+                        flag = false;
+                    },false);
+                },false);
+            }
+
+        },
+        data:{
+            flag:'red',
+            green:false,
+            flag1:false
+        },
+        methods:{
+            changColor:function(){
+                return this.green=!this.green;
+            }
+        }
+    });//Object.defineProerty
+</script>
+</body>
+</html>

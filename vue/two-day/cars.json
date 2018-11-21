@@ -1,0 +1,18 @@
+[
+  {
+    "isSelected": true,
+    "productName": "nodejs1",
+    "productImg": "http://n.sinaimg.cn/games/zxpc20180319/price_2.png",
+    "productInfor": "颜色:node.js学习1",
+    "productPrice": 57.8,
+    "productConet": 3
+  },
+  {
+    "isSelected": true,
+    "productName": "nodejs2",
+    "productImg": "http://n.sinaimg.cn/games/zxpc20180319/price_2.png",
+    "productInfor": "颜色:node.js学习2",
+    "productPrice": 57.8,
+    "productConet": 3
+  }
+]

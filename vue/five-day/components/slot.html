@@ -1,0 +1,36 @@
+<!Doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>slot-定制模板</title>
+</head>
+<body>
+<script src="../node_modules/vue/dist/vue.js"></script>
+<div id="app">
+    <model><p slot="content">我是内容</p><h1 slot="title">我是标题</h1></model>
+</div>
+<!--slot作用 定制模板-->
+<!--slot是放置一些默认的内容,如果传递了内容则替换掉-->
+<template id="model">
+    <div>
+        <slot name="title">标题</slot>
+        <slot name="content">内容</slot>
+        <slot name="default">只是一个默认</slot>
+    </div>
+</template>
+<script type="text/javascript">
+    'use strict';//js严格模式
+    var vue = new Vue({
+        el:'#app',
+        components:{
+            model:{
+                template:'#model'
+            }
+        },
+        data:{
+
+        }
+    })
+</script>
+</body>
+</html>

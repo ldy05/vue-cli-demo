@@ -1,0 +1,38 @@
+<!Doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>动画</title>
+    <style>
+        [v-cloak]{display: none;}/*解决闪烁问题,后期都可以不采用*/
+        .box{
+            width: 100px;
+            height: 100px;
+            background: red;
+        }
+        /*动画*/
+        .fade-enter,.fade-leave-to{opacity: 0;}
+        .fade-enter-to,.fade-leave{opacity: 1;}
+        .fade-enter-active,.fade-leave-active{transition: all 1s;}
+    </style>
+</head>
+<body>
+<script src="../node_modules/vue/dist/vue.js"></script>
+<div id="app" v-cloak>
+    <button @click="flag=!flag">切换</button>
+
+    <transition name="fade">
+        <div v-show="flag" class="box">我是一个盒子</div>
+    </transition>
+</div>
+<script type="text/javascript">
+    'use strict';//js严格模式
+    let vm = new Vue({
+        el:"#app",
+        data:{
+            flag:true
+        }
+    });
+</script>
+</body>
+</html>

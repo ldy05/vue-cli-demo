@@ -1,0 +1,49 @@
+<!Doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>父调用子组件的方法</title>
+</head>
+<body>
+<script src="../node_modules/vue/dist/vue.js"></script>
+<div id="app">
+   <loading ref="loads"></loading>
+</div>
+<!--slot作用 定制模板-->
+<!--slot是放置一些默认的内容,如果传递了内容则替换掉-->
+<template id="loads">
+    <div v-show="flag">
+       疯狂加载中.....
+        <div ref="cur">文字文字文字</div>
+    </div>
+</template>
+<script type="text/javascript">
+    'use strict';//js严格模式
+    var load = {
+        template:'#loads',
+        data(){
+            return{
+                flag:true
+            }
+        },
+        mounted(){//ref是组件的dom元素
+            this.$refs.cur.style.background = 'yellow'
+        },
+        methods:{
+            hide:function(){
+                this.flag = false;
+            }
+        }
+    };
+    var vue = new Vue({
+        el:'#app',
+        components:{
+            loading:load
+        },
+        mounted(){//ref 如果放在组件上 获取的是组件的实例,并不是组件的dom元素
+           this.$refs.loads.hide();
+        }
+    })
+</script>
+</body>
+</html>

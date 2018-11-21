@@ -1,0 +1,40 @@
+<!Doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>指令</title>
+</head>
+<body>
+<div id="app">
+    {{msg}}
+    <!--表单元素 input checkbox textarea radio select-->
+    <!--vue的指令 directive  只是dom上的行间属性,vue给这类属性赋予一定的 意义  来实现特殊功能,所有指令都以v-开头,
+    value属性默认情况下会vue忽略掉 selected checked 都没有意义-->
+
+    <!-- v-model会将msg的值会赋予输入框,输入框的值会改变了影响数据 双向改变-->
+    <input type="text" v-model="msg"><!---->
+    <!-- v-text ==={{}} 防止{{}}出现在页面上 将数据插到页面中-->
+    <div v-text="msg"></div>
+    <!-- v-once 只绑定一次,当数据再次发生变化也不会导致页面刷新-->
+    <div v-once>
+        {{msg}}
+    </div>
+    <!-- v-html 把html字符当做html渲染 一定是可以信任的html-->
+    <div v-html="p"></div>
+
+
+</div>
+<script src="../node_modules/vue/dist/vue.js"></script>
+<script type="text/javascript">
+    'use strict';//js严格模式
+    //引入vue后白给你一个Vue构造函数
+    let vm = new Vue({ //vm == viewModel
+        el:"#app",//告诉vue能管理哪个部分,querySeletor
+        data:{//data中的数据会被vm所代理
+            msg:'hello,ldy',//可以通过vm.msg取到内容
+            p:"<p>hello1</p>"
+        }
+    });//Object.defineProerty
+</script>
+</body>
+</html>
